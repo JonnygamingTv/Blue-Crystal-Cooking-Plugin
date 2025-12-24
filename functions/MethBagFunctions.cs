@@ -27,7 +27,8 @@ namespace Ocelot.BlueCrystalCooking.functions
         {
             if (Physics.Raycast(player.Player.look.aim.position, player.Player.look.aim.forward, out RaycastHit raycastHit, 2, RayMasks.BARRICADE))
             {
-                if (BarricadeManager.tryGetInfo(raycastHit.transform, out byte x, out byte y, out ushort plant, out ushort index, out BarricadeRegion region, out BarricadeDrop drop))
+                BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(raycastHit.transform);
+                if (drop != null)
                 {
                     if (drop.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId)
                     {
@@ -41,7 +42,10 @@ namespace Ocelot.BlueCrystalCooking.functions
                             }
                         }
                         ChatManager.serverSendMessage(BlueCrystalCookingPlugin.Instance.Translate("bluecrystalbags_obtained", random), Color.white, null, player.SteamPlayer(), EChatMode.SAY, BlueCrystalCookingPlugin.Instance.Configuration.Instance.IconImageUrl, true);
-                        BarricadeManager.destroyBarricade(region, x, y, plant, index);
+                        BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_y, drop.asset.id);
+                        //drop.GetServersideData().barricade.askDamage(drop.asset.health);
+                        //BarricadeManager.damage(raycast.BarricadeRootTransform.transform, raycast.Barricade.barricade.health, 1, false, actor.CSteamID);
+                        //BarricadeManager.destroyBarricade(region, x, y, plant, index);
                     }
                 }
             }

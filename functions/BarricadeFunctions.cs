@@ -27,17 +27,18 @@ namespace Ocelot.BlueCrystalCooking.functions
         {
             if (barricadeTransform)
             {
-                BarricadeData bData = BlueCrystalCookingPlugin.Instance.getBarricadeDataAtPosition(barricadeTransform.position);
-                if (bData == null)
-                    return;
+                BarricadeDrop barri = BarricadeManager.FindBarricadeByRootTransform(barricadeTransform);
+//                BarricadeData bData = BlueCrystalCookingPlugin.Instance.getBarricadeDataAtPosition(barricadeTransform.position);
+//                if (bData == null)
+//                    return;
 
-                if (bData.barricade.health <= pendingTotalDamage)
+                if (barri.asset.health <= pendingTotalDamage)
                 {
-                    if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BarrelObjectId == bData.barricade.id)
+                    if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BarrelObjectId == barri.asset.id)
                     {
                         BlueCrystalCookingPlugin.Instance.placedBarrelsTransformsIngredients.Remove(barricadeTransform);
                     }
-                    else if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayId == bData.barricade.id)
+                    else if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayId == barri.asset.id)
                     {
                         foreach(var tray in BlueCrystalCookingPlugin.Instance.freezingTrays.ToList())
                         {

@@ -39,7 +39,7 @@ namespace Ocelot.BlueCrystalCooking
             Logger.Log("BlueCrystalCookingPlugin v" + VERSION + " by Ocelot loaded! Enjoy! :)", ConsoleColor.Yellow);
 
             BarricadeManager.onDeployBarricadeRequested += BarricadeDeployed;
-            BarricadeManager.onSalvageBarricadeRequested += BarricadeSalvaged;
+            BarricadeDrop.OnSalvageRequested_Global += BarricadeSalvaged;
             //UnturnedPlayerEvents.OnPlayerUpdateGesture += OnPlayerUpdateGesture;
             PlayerAnimator.OnGestureChanged_Global += OnGestureChanged;
             UseableConsumeable.onConsumePerformed += ConsumeAction;
@@ -53,33 +53,36 @@ namespace Ocelot.BlueCrystalCooking
             }
         }
 
-        private void BarricadeSalvaged(CSteamID steamID, byte x, byte y, ushort plant, ushort index, ref bool shouldAllow)
+        private void BarricadeSalvaged(BarricadeDrop barri, SteamPlayer instigatorClient, ref bool shouldAllow)
         {
-            BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion region);
+            placedBarrelsTransformsIngredients.Remove(barri.model);
+            /*
+            BarricadeManager.tryGetRegion(barri.model, out byte x, out byte y, out ushort plant, out BarricadeRegion region);
             foreach (var drop in region.drops.ToList())
             {
                 if (drop.asset.id == Configuration.Instance.BarrelObjectId)
                 {
-                    BarricadeData barricade = region.findBarricadeByInstanceID(drop.instanceID);
+                    BarricadeDrop barricade = region.FindBarricadeByRootTransform(drop.model);
                     foreach (var item in placedBarrelsTransformsIngredients.ToList())
                     {
-                        if (item.Key.position == barricade.point)
+                        if (item.Key.position == barricade.model.position)
                         {
-                            BarricadeManager.tryGetInfo(GetPlacedObjectTransform(barricade.point), out byte xBarricade, out byte yBarricade, out ushort plantBarricade, out ushort indexBarricade, out BarricadeRegion regionBarricade);
-                            if (x == xBarricade && y == yBarricade && plant == plantBarricade && index == indexBarricade)
+                            BarricadeDrop info = BarricadeManager.FindBarricadeByRootTransform(barricade.model); //, out byte xBarricade, out byte yBarricade, out ushort plantBarricade, out ushort indexBarricade, out BarricadeRegion regionBarricade);
+                            if (x == info.model.position.x && y == yBarricade && plant == plantBarricade && index == indexBarricade)
                             {
-                                placedBarrelsTransformsIngredients.Remove(GetPlacedObjectTransform(barricade.point));
+                                placedBarrelsTransformsIngredients.Remove(GetPlacedObjectTransform(barricade.model.position));
                             }
                         }
                     }
                 }
             }
+            */
         }
 
         protected override void Unload()
         {
             BarricadeManager.onDeployBarricadeRequested -= BarricadeDeployed;
-            BarricadeManager.onSalvageBarricadeRequested -= BarricadeSalvaged;
+            BarricadeDrop.OnSalvageRequested_Global -= BarricadeSalvaged;
             PlayerAnimator.OnGestureChanged_Global -= OnGestureChanged;
             //UnturnedPlayerEvents.OnPlayerUpdateGesture -= OnPlayerUpdateGesture;
             UseableConsumeable.onConsumePerformed -= ConsumeAction;
@@ -97,8 +100,7 @@ namespace Ocelot.BlueCrystalCooking
             {
                 BarrelFunctions.OnGestureChanged(UnturnedPlayer.FromPlayer(arg1.player), gesture);
                 MethBagFunctions.OnGestureChanged(UnturnedPlayer.FromPlayer(arg1.player), gesture);
-            }
-                
+            }       
         }
 
         //private void OnPlayerUpdateGesture(UnturnedPlayer player, UnturnedPlayerEvents.PlayerGesture gesture)
@@ -170,14 +172,14 @@ namespace Ocelot.BlueCrystalCooking
                 {
                     if (drop.asset.id == Configuration.Instance.BarrelObjectId)
                     {
-                        BarricadeData barricade = region.findBarricadeByInstanceID(drop.instanceID);
-                        Transform barrelTransform = GetPlacedObjectTransform(barricade.point);
-                        if (placedBarrelsTransformsIngredients.ContainsKey(barrelTransform))
+//                        BarricadeDrop barricade = region.FindBarricadeByRootTransform(drop.model);
+//                        Transform barrelTransform = GetPlacedObjectTransform(drop.model.position);
+                        if (placedBarrelsTransformsIngredients.ContainsKey(drop.model))
                         {
                             Logger.Log("Duplicated entry detected, skipping object. (No need to worry)", ConsoleColor.Yellow);
                         } else
                         {
-                            placedBarrelsTransformsIngredients.Add(barrelTransform, new BarrelObject(ingredientsStandard, 0));
+                            placedBarrelsTransformsIngredients.Add(drop.model, new BarrelObject(ingredientsStandard, 0));
                         }
                     }
                 }

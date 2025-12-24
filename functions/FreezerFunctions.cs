@@ -26,7 +26,7 @@ namespace Ocelot.BlueCrystalCooking.functions
         public static void BarricadeDeployed(Barricade barricade, ItemBarricadeAsset asset, Transform hit, ref Vector3 point, ref float angle_x, ref float angle_y, ref float angle_z, ref ulong owner, ref ulong group, ref bool shouldAllow)
         {
             Vector3 pos = point;
-            if (barricade.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.LiquidTrayId)
+            if (barricade.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.LiquidTrayId)
             {
                 if (Physics.Raycast(pos, Vector3.down, out RaycastHit raycastHit, 10, RayMasks.BARRICADE))
                 {
@@ -34,7 +34,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                     {
                         if (raycastHit.transform == raycastHitUp.transform)
                         {
-                            BarricadeManager.tryGetInfo(raycastHit.transform, out byte x, out byte y, out ushort plant, out ushort index, out BarricadeRegion region, out BarricadeDrop drop);
+                            BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(raycastHit.transform);
                             if (drop.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.FreezerId)
                             {
                                 ulong ownerTray = owner;
@@ -66,10 +66,21 @@ namespace Ocelot.BlueCrystalCooking.functions
                             tray.freezingSeconds += 1;
                             if (tray.freezingSeconds >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayFreezingTimeSecs)
                             {
-                                if (BarricadeManager.tryGetInfo(tray.transform, out byte x, out byte y, out ushort plant, out ushort index, out BarricadeRegion region))
+                                BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(tray.transform);
+                                if (drop != null)
                                 {
-                                    BarricadeManager.destroyBarricade(region, x, y, plant, index);
-                                    BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                    BarricadeData dat = drop.GetServersideData();
+                                    BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_y, drop.asset.id);
+                                    ItemBarricadeAsset _asset = (ItemBarricadeAsset)Assets.find(EAssetType.RESOURCE, BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId);
+                                    if (_asset != null)
+                                    {
+                                        Barricade newBarr = new Barricade(_asset);
+                                        BarricadeManager.dropBarricade(newBarr, null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                    }
+                                    else
+                                    {
+                                        BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                    }
                                     if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.EnableBlueCrystalFreezeEffect)
                                     {
                                         EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos);
@@ -84,10 +95,20 @@ namespace Ocelot.BlueCrystalCooking.functions
                     tray.freezingSeconds += 1;
                     if (tray.freezingSeconds >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayFreezingTimeSecs)
                     {
-                        if (BarricadeManager.tryGetInfo(tray.transform, out byte x, out byte y, out ushort plant, out ushort index, out BarricadeRegion region))
+                        BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(tray.transform);
+                        if (drop != null)
                         {
-                            BarricadeManager.destroyBarricade(region, x, y, plant, index);
-                            BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                            BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_x, drop.asset.id);
+                            ItemBarricadeAsset _asset = (ItemBarricadeAsset)Assets.find(EAssetType.RESOURCE, BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId);
+                            if (_asset != null)
+                            {
+                                Barricade newBarr = new Barricade(_asset);
+                                BarricadeManager.dropBarricade(newBarr, null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                            }
+                            else
+                            {
+                                BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                            }
                             if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.EnableBlueCrystalFreezeEffect)
                             {
                                 EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos);

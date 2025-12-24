@@ -60,7 +60,7 @@
       <HintPath>lib\SDG.NetTransport.dll</HintPath>
     </Reference>
     <Reference Include="Steamworks.NET">
-      <HintPath>lib\Steamworks.NET.dll</HintPath>
+      <HintPath>lib\com.rlabrecque.steamworks.net.dll</HintPath>
     </Reference>
     <Reference Include="System.Data, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
