@@ -67,10 +67,9 @@ namespace Ocelot.BlueCrystalCooking.functions
                             if (tray.freezingSeconds >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayFreezingTimeSecs)
                             {
                                 BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(tray.transform);
-                                if (drop != null)
+                                if (drop != null && BarricadeManager.tryGetRegion(tray.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion barricadeRegion))
                                 {
-                                    BarricadeData dat = drop.GetServersideData();
-                                    BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_y, drop.asset.id);
+                                    BarricadeManager.destroyBarricade(drop, x, y, plant);
                                     ItemBarricadeAsset _asset = (ItemBarricadeAsset)Assets.find(EAssetType.RESOURCE, BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId);
                                     if (_asset != null)
                                     {
@@ -96,9 +95,9 @@ namespace Ocelot.BlueCrystalCooking.functions
                     if (tray.freezingSeconds >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayFreezingTimeSecs)
                     {
                         BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(tray.transform);
-                        if (drop != null)
+                        if (drop != null && BarricadeManager.tryGetRegion(tray.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion barricadeRegion))
                         {
-                            BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_x, drop.asset.id);
+                            BarricadeManager.destroyBarricade(drop, x, y, plant);
                             ItemBarricadeAsset _asset = (ItemBarricadeAsset)Assets.find(EAssetType.RESOURCE, BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId);
                             if (_asset != null)
                             {

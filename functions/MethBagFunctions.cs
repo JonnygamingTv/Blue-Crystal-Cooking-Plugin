@@ -28,25 +28,19 @@ namespace Ocelot.BlueCrystalCooking.functions
             if (Physics.Raycast(player.Player.look.aim.position, player.Player.look.aim.forward, out RaycastHit raycastHit, 2, RayMasks.BARRICADE))
             {
                 BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(raycastHit.transform);
-                if (drop != null)
+                if (drop != null && drop.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId && BarricadeManager.tryGetRegion(raycastHit.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion barricadeRegion))
                 {
-                    if (drop.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId)
+                    int random = UnityEngine.Random.Range(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalBagsAmountMin, BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalBagsAmountMax);
+                    for (int i = 0; i < random; i++)
                     {
-                        int random = UnityEngine.Random.Range(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalBagsAmountMin, BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalBagsAmountMax);
-                        for (int i = 0; i < random; i++)
+                        ItemManager.dropItem(new Item(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalBagId, true), new Vector3(raycastHit.transform.position.x, raycastHit.transform.position.y + 2, raycastHit.transform.position.z), false, true, false);
+                        if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.EnableBlueCrystalFreezeEffect)
                         {
-                            ItemManager.dropItem(new Item(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalBagId, true), new Vector3(raycastHit.transform.position.x, raycastHit.transform.position.y + 2, raycastHit.transform.position.z), false, true, false);
-                            if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.EnableBlueCrystalFreezeEffect)
-                            {
-                                EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, raycastHit.transform.position);
-                            }
+                            EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, raycastHit.transform.position);
                         }
-                        ChatManager.serverSendMessage(BlueCrystalCookingPlugin.Instance.Translate("bluecrystalbags_obtained", random), Color.white, null, player.SteamPlayer(), EChatMode.SAY, BlueCrystalCookingPlugin.Instance.Configuration.Instance.IconImageUrl, true);
-                        BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_y, drop.asset.id);
-                        //drop.GetServersideData().barricade.askDamage(drop.asset.health);
-                        //BarricadeManager.damage(raycast.BarricadeRootTransform.transform, raycast.Barricade.barricade.health, 1, false, actor.CSteamID);
-                        //BarricadeManager.destroyBarricade(region, x, y, plant, index);
                     }
+                    ChatManager.serverSendMessage(BlueCrystalCookingPlugin.Instance.Translate("bluecrystalbags_obtained", random), Color.white, null, player.SteamPlayer(), EChatMode.SAY, BlueCrystalCookingPlugin.Instance.Configuration.Instance.IconImageUrl, true);
+                    BarricadeManager.destroyBarricade(drop, x, y, plant);
                 }
             }
         }

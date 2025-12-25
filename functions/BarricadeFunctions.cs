@@ -32,7 +32,7 @@ namespace Ocelot.BlueCrystalCooking.functions
 //                if (bData == null)
 //                    return;
 
-                if (barri.asset.health <= pendingTotalDamage)
+                if (barri.GetServersideData().barricade.health <= pendingTotalDamage)
                 {
                     if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BarrelObjectId == barri.asset.id)
                     {

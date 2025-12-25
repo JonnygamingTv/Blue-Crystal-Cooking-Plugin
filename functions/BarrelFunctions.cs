@@ -150,20 +150,16 @@ namespace Ocelot.BlueCrystalCooking.functions
                     if (Physics.Raycast(pos, Vector3.down, out RaycastHit raycastHit, 10, RayMasks.BARRICADE))
                     {
                         BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(raycastHit.transform);
-                        if (drop != null)
+                        if (drop != null && drop.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.BarrelObjectId && BarricadeManager.tryGetRegion(raycastHit.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion barricadeRegion))
                         {
-                            if (drop.asset.id == BlueCrystalCookingPlugin.Instance.Configuration.Instance.BarrelObjectId)
+                            if (BlueCrystalCookingPlugin.Instance.placedBarrelsTransformsIngredients.TryGetValue(raycastHit.transform, out BarrelObject barrel))
                             {
-                                if(BlueCrystalCookingPlugin.Instance.placedBarrelsTransformsIngredients.TryGetValue(raycastHit.transform, out BarrelObject barrel))
+                                ChatManager.serverSendMessage(BlueCrystalCookingPlugin.Instance.Translate("ingredient_added", asset.itemName), Color.white, null, UnturnedPlayer.FromCSteamID(new CSteamID(ownerBarricade)).SteamPlayer(), EChatMode.SAY, BlueCrystalCookingPlugin.Instance.Configuration.Instance.IconImageUrl, true);
+                                barrel.ingredients.Add(barricade.asset.id);
+                                BlueCrystalCookingPlugin.Instance.Wait(0.2f, () =>
                                 {
-                                    ChatManager.serverSendMessage(BlueCrystalCookingPlugin.Instance.Translate("ingredient_added", asset.itemName), Color.white, null, UnturnedPlayer.FromCSteamID(new CSteamID(ownerBarricade)).SteamPlayer(), EChatMode.SAY, BlueCrystalCookingPlugin.Instance.Configuration.Instance.IconImageUrl, true);
-                                    barrel.ingredients.Add(barricade.asset.id);
-                                    BlueCrystalCookingPlugin.Instance.Wait(0.2f, () => {
-                                        BarricadeManager.destroyBarricade(drop, drop.asset.size_x, drop.asset.size_y, drop.asset.id);
-                                        //BarricadeManager.tryGetInfo(BlueCrystalCookingPlugin.Instance.GetPlacedObjectTransform(pos), out byte xingredient, out byte yingredient, out ushort plantingredient, out ushort indexingredient, out BarricadeRegion regioningredient);
-                                        //BarricadeManager.destroyBarricade(regioningredient, xingredient, yingredient, plantingredient, indexingredient);
-                                    });
-                                }
+                                    BarricadeManager.destroyBarricade(drop, x, y, plant);
+                                });
                             }
                         }
                     }
