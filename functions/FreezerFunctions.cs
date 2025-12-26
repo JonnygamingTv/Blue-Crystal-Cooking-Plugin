@@ -90,6 +90,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                             break; // is multiple generators = faster intended?
                         }
                     }
+                    continue;
                 } else
                 {
                     tray.freezingSeconds += 1;
