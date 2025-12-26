@@ -90,7 +90,7 @@ namespace Ocelot.BlueCrystalCooking.functions
 
         public static void Update()
         {
-            foreach (var drugeffect in BlueCrystalCookingPlugin.Instance.drugeffectPlayersList.ToList())
+            foreach (var drugeffect in BlueCrystalCookingPlugin.Instance.drugeffectPlayersList)
             {
                 if (BlueCrystalCookingPlugin.getCurrentTime() - drugeffect.time >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.DrugEffectDurationSecs)
                 {

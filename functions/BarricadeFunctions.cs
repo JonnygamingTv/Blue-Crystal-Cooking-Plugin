@@ -40,7 +40,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                     }
                     else if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayId == barri.asset.id)
                     {
-                        foreach(var tray in BlueCrystalCookingPlugin.Instance.freezingTrays.ToList())
+                        foreach(var tray in BlueCrystalCookingPlugin.Instance.freezingTrays)
                         {
                             if (tray.transform == null)
                                 return;

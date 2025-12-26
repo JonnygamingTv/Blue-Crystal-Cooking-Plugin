@@ -30,8 +30,8 @@ namespace Ocelot.BlueCrystalCooking
         private int Frame = 0;
         public long timer = 0;
         public Dictionary<Transform, BarrelObject> placedBarrelsTransformsIngredients = new Dictionary<Transform, BarrelObject>();
-        public List<DrugeffectTimeObject> drugeffectPlayersList = new List<DrugeffectTimeObject>();
-        public List<FreezingTrayObject> freezingTrays = new List<FreezingTrayObject>();
+        public HashSet<DrugeffectTimeObject> drugeffectPlayersList = new HashSet<DrugeffectTimeObject>();
+        public HashSet<FreezingTrayObject> freezingTrays = new HashSet<FreezingTrayObject>();
 
         protected override void Load()
         {
@@ -40,7 +40,6 @@ namespace Ocelot.BlueCrystalCooking
 
             BarricadeManager.onDeployBarricadeRequested += BarricadeDeployed;
             BarricadeDrop.OnSalvageRequested_Global += BarricadeSalvaged;
-            //UnturnedPlayerEvents.OnPlayerUpdateGesture += OnPlayerUpdateGesture;
             PlayerAnimator.OnGestureChanged_Global += OnGestureChanged;
             UseableConsumeable.onConsumePerformed += ConsumeAction;
             BarricadeManager.onDamageBarricadeRequested += BarricadeDamaged;
@@ -56,27 +55,6 @@ namespace Ocelot.BlueCrystalCooking
         private void BarricadeSalvaged(BarricadeDrop barri, SteamPlayer instigatorClient, ref bool shouldAllow)
         {
             placedBarrelsTransformsIngredients.Remove(barri.model);
-            /*
-            BarricadeManager.tryGetRegion(barri.model, out byte x, out byte y, out ushort plant, out BarricadeRegion region);
-            foreach (var drop in region.drops.ToList())
-            {
-                if (drop.asset.id == Configuration.Instance.BarrelObjectId)
-                {
-                    BarricadeDrop barricade = region.FindBarricadeByRootTransform(drop.model);
-                    foreach (var item in placedBarrelsTransformsIngredients.ToList())
-                    {
-                        if (item.Key.position == barricade.model.position)
-                        {
-                            BarricadeDrop info = BarricadeManager.FindBarricadeByRootTransform(barricade.model); //, out byte xBarricade, out byte yBarricade, out ushort plantBarricade, out ushort indexBarricade, out BarricadeRegion regionBarricade);
-                            if (x == info.model.position.x && y == yBarricade && plant == plantBarricade && index == indexBarricade)
-                            {
-                                placedBarrelsTransformsIngredients.Remove(GetPlacedObjectTransform(barricade.model.position));
-                            }
-                        }
-                    }
-                }
-            }
-            */
         }
 
         protected override void Unload()
@@ -84,7 +62,6 @@ namespace Ocelot.BlueCrystalCooking
             BarricadeManager.onDeployBarricadeRequested -= BarricadeDeployed;
             BarricadeDrop.OnSalvageRequested_Global -= BarricadeSalvaged;
             PlayerAnimator.OnGestureChanged_Global -= OnGestureChanged;
-            //UnturnedPlayerEvents.OnPlayerUpdateGesture -= OnPlayerUpdateGesture;
             UseableConsumeable.onConsumePerformed -= ConsumeAction;
             BarricadeManager.onDamageBarricadeRequested -= BarricadeDamaged;
         }
@@ -205,7 +182,7 @@ namespace Ocelot.BlueCrystalCooking
             {
                 timer = getCurrentTime();
                 MethBagFunctions.Update();
-                FreezerFunctions.Update();
+                System.Threading.Tasks.Task.Run(()=>FreezerFunctions.Update());
             }
             
         }

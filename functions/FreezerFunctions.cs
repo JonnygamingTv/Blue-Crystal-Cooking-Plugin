@@ -55,7 +55,7 @@ namespace Ocelot.BlueCrystalCooking.functions
         }
         public static void Update()
         {
-            foreach (var tray in BlueCrystalCookingPlugin.Instance.freezingTrays.ToList())
+            foreach (var tray in BlueCrystalCookingPlugin.Instance.freezingTrays)
             { 
                 if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.FreezerNeedsPower)
                 {
@@ -69,24 +69,25 @@ namespace Ocelot.BlueCrystalCooking.functions
                                 BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(tray.transform);
                                 if (drop != null && BarricadeManager.tryGetRegion(tray.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion barricadeRegion))
                                 {
-                                    BarricadeManager.destroyBarricade(drop, x, y, plant);
+                                    Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>BarricadeManager.destroyBarricade(drop, x, y, plant));
                                     ItemBarricadeAsset _asset = (ItemBarricadeAsset)Assets.find(EAssetType.RESOURCE, BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId);
                                     if (_asset != null)
                                     {
                                         Barricade newBarr = new Barricade(_asset);
-                                        BarricadeManager.dropBarricade(newBarr, null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                        Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>BarricadeManager.dropBarricade(newBarr, null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group));
                                     }
                                     else
                                     {
-                                        BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                        Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group));
                                     }
                                     if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.EnableBlueCrystalFreezeEffect)
                                     {
-                                        EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos);
+                                        Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos));
                                     }
                                     BlueCrystalCookingPlugin.Instance.freezingTrays.Remove(tray);
                                 }
                             }
+                            break; // is multiple generators = faster intended?
                         }
                     }
                 } else
@@ -97,20 +98,20 @@ namespace Ocelot.BlueCrystalCooking.functions
                         BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(tray.transform);
                         if (drop != null && BarricadeManager.tryGetRegion(tray.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion barricadeRegion))
                         {
-                            BarricadeManager.destroyBarricade(drop, x, y, plant);
+                            Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>BarricadeManager.destroyBarricade(drop, x, y, plant));
                             ItemBarricadeAsset _asset = (ItemBarricadeAsset)Assets.find(EAssetType.RESOURCE, BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId);
                             if (_asset != null)
                             {
                                 Barricade newBarr = new Barricade(_asset);
-                                BarricadeManager.dropBarricade(newBarr, null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>BarricadeManager.dropBarricade(newBarr, null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group));
                             }
                             else
                             {
-                                BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group);
+                                Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>BarricadeManager.dropBarricade(new Barricade(BlueCrystalCookingPlugin.Instance.Configuration.Instance.FrozenTrayId), null, tray.pos, tray.angle_x, tray.angle_y, tray.angle_z, tray.owner, tray.group));
                             }
                             if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.EnableBlueCrystalFreezeEffect)
                             {
-                                EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos);
+                                Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos));
                             }
                             BlueCrystalCookingPlugin.Instance.freezingTrays.Remove(tray);
                         }
