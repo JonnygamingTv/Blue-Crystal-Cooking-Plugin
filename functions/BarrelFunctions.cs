@@ -158,8 +158,10 @@ namespace Ocelot.BlueCrystalCooking.functions
                                 barrel.ingredients.Add(barricade.asset.id);
                                 BlueCrystalCookingPlugin.Instance.Wait(0.2f, () =>
                                 {
-                                    BarricadeManager.destroyBarricade(drop, x, y, plant);
+                                    BarricadeDrop drop2 = BarricadeManager.FindBarricadeByRootTransform(hit);
+                                    BarricadeManager.destroyBarricade(drop2, x, y, plant);
                                 });
+                                break;
                             }
                         }
                     }
