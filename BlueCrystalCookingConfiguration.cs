@@ -7,29 +7,30 @@ namespace Ocelot.BlueCrystalCooking
     public class BlueCrystalCookingConfiguration : IRocketPluginConfiguration
     {
         // CONFIG VARIABLES
-        public string IconImageUrl;
+        public bool UseDrugEffectSpeed;
+        public bool UseDrugEffectJump;
+        public bool EnableBlueCrystalFreezeEffect;
+        public bool EnableBarrelStirEffect;
+        public bool FreezerNeedsPower;
+        public byte StirProgressAddPercentage;
+        public ushort FreezerId;
         public ushort BarrelObjectId;
         public ushort BlueCrystalBagId;
-        public bool UseDrugEffectSpeed;
-        public float DrugEffectSpeedMultiplier;
-        public bool UseDrugEffectJump;
-        public float DrugEffectJumpMultiplier;
         public ushort BlueCrystalTrayId;
         public ushort FrozenTrayId;
         public ushort LiquidTrayId;
-        public ushort FreezerId;
+        public ushort BlueCrystalFreezeEffectId;
+        public ushort BarrelStirEffectId;
         public int DrugEffectDurationSecs;
         public int BlueCrystalTrayFreezingTimeSecs;
-        public ushort BlueCrystalFreezeEffectId;
-        public bool EnableBlueCrystalFreezeEffect;
-        public ushort BarrelStirEffectId;
-        public bool EnableBarrelStirEffect;
-        public uint StirProgressAddPercentage;
         public int BlueCrystalBagsAmountMin;
         public int BlueCrystalBagsAmountMax;
+        public float DrugEffectSpeedMultiplier;
+        public float DrugEffectJumpMultiplier;
+        public string IconImageUrl;
         [XmlArrayItem(ElementName = "Id")]
         public List<ushort> drugIngredientIds;
-        public bool FreezerNeedsPower;
+        
 
         public void LoadDefaults()
         {
