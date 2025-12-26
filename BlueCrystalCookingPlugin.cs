@@ -30,8 +30,8 @@ namespace Ocelot.BlueCrystalCooking
         private int Frame = 0;
         public long timer = 0;
         public Dictionary<Transform, BarrelObject> placedBarrelsTransformsIngredients = new Dictionary<Transform, BarrelObject>();
-        public HashSet<DrugeffectTimeObject> drugeffectPlayersList = new HashSet<DrugeffectTimeObject>();
-        public HashSet<FreezingTrayObject> freezingTrays = new HashSet<FreezingTrayObject>();
+        public List<DrugeffectTimeObject> drugeffectPlayersList = new List<DrugeffectTimeObject>();
+        public List<FreezingTrayObject> freezingTrays = new List<FreezingTrayObject>();
 
         protected override void Load()
         {

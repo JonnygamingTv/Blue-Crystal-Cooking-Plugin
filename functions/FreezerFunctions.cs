@@ -55,8 +55,9 @@ namespace Ocelot.BlueCrystalCooking.functions
         }
         public static void Update()
         {
-            foreach (var tray in BlueCrystalCookingPlugin.Instance.freezingTrays)
-            { 
+            for (int i=BlueCrystalCookingPlugin.Instance.freezingTrays.Count-1;i>-1;i--)
+            {
+                var tray = BlueCrystalCookingPlugin.Instance.freezingTrays[i];
                 if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.FreezerNeedsPower)
                 {
                     foreach (var Generator in PowerTool.checkGenerators(tray.pos, PowerTool.MAX_POWER_RANGE, ushort.MaxValue))
@@ -84,7 +85,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                                     {
                                         Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos));
                                     }
-                                    BlueCrystalCookingPlugin.Instance.freezingTrays.Remove(tray);
+                                    BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAt(i);
                                 }
                             }
                             break; // is multiple generators = faster intended?
@@ -114,7 +115,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                             {
                                 Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos));
                             }
-                            BlueCrystalCookingPlugin.Instance.freezingTrays.Remove(tray);
+                            BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAt(i);
                         }
                     }
                 }

@@ -90,11 +90,12 @@ namespace Ocelot.BlueCrystalCooking.functions
 
         public static void Update()
         {
-            foreach (var drugeffect in BlueCrystalCookingPlugin.Instance.drugeffectPlayersList)
+            for (int i=BlueCrystalCookingPlugin.Instance.drugeffectPlayersList.Count-1;i>-1;i--)
             {
+                var drugeffect = BlueCrystalCookingPlugin.Instance.drugeffectPlayersList[i];
                 if (BlueCrystalCookingPlugin.getCurrentTime() - drugeffect.time >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.DrugEffectDurationSecs)
                 {
-                    BlueCrystalCookingPlugin.Instance.drugeffectPlayersList.Remove(drugeffect);
+                    BlueCrystalCookingPlugin.Instance.drugeffectPlayersList.RemoveAt(i);
                     UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(ulong.Parse(drugeffect.playerId)));
                     if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.UseDrugEffectSpeed)
                     {

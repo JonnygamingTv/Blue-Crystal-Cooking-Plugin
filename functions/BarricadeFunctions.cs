@@ -40,14 +40,15 @@ namespace Ocelot.BlueCrystalCooking.functions
                     }
                     else if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalTrayId == barri.asset.id)
                     {
-                        foreach(var tray in BlueCrystalCookingPlugin.Instance.freezingTrays)
+                        for(int i=BlueCrystalCookingPlugin.Instance.freezingTrays.Count-1;i>-1;i--)
                         {
+                            var tray = BlueCrystalCookingPlugin.Instance.freezingTrays[i];
                             if (tray.transform == null)
                                 return;
 
                             if (tray.transform == barricadeTransform)
                             {
-                                BlueCrystalCookingPlugin.Instance.freezingTrays.Remove(tray);
+                                BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAt(i);
                             }
                         }
                     }
