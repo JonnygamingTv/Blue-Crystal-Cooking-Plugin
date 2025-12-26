@@ -112,20 +112,23 @@ namespace Ocelot.BlueCrystalCooking
             }
             return objectsOnMap;
         }
+        public Transform GetObject(Vector3 pos)
+        {
+            foreach (var region in BarricadeManager.regions)
+            {
+                foreach (var drop in region.drops)
+                {
+                    if (drop.model.position == pos) return drop.model;
+                }
+            }
+            return null;
+        }
 
         public Transform GetPlacedObjectTransform(Vector3 objectPosition)
         {
-            Dictionary<Vector3, Transform> objectsOnMap = new Dictionary<Vector3, Transform>();
-            objectsOnMap = GetAllObjects();
-
-            foreach (var mapObject in objectsOnMap.ToList())
-            {
-                if (mapObject.Key == objectPosition)
-                {
-                    return mapObject.Value;
-                }
-            }
-            return null; //Never happens
+            //Dictionary<Vector3, Transform> objectsOnMap = GetAllObjects();
+            //objectsOnMap.TryGetValue(objectPosition, out Transform mapObject);
+            return GetObject(objectPosition);
         }
         public BarricadeData getBarricadeDataAtPosition(Vector3 position)
         {
@@ -161,7 +164,7 @@ namespace Ocelot.BlueCrystalCooking
                     }
                 }
             }
-            Logger.Log("All barrels added.", ConsoleColor.Green);
+            Logger.Log("All "+ placedBarrelsTransformsIngredients.Count.ToString() + " barrels added.", ConsoleColor.Green);
         }
 
         public override TranslationList DefaultTranslations => new TranslationList
