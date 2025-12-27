@@ -56,6 +56,7 @@ namespace Ocelot.BlueCrystalCooking
         private void BarricadeSalvaged(BarricadeDrop barri, SteamPlayer instigatorClient, ref bool shouldAllow)
         {
             placedBarrelsTransformsIngredients.Remove(barri.model);
+            freezingTrays.RemoveAll(gg=>gg.transform==barri.model); // slow but necessary to patch dupe bug
         }
 
         protected override void Unload()

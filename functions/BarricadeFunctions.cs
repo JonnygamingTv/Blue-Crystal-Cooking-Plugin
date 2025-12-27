@@ -48,7 +48,7 @@ namespace Ocelot.BlueCrystalCooking.functions
 
                             if (tray.transform == barricadeTransform)
                             {
-                                BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAt(i);
+                                BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAtFast(i);
                             }
                         }
                     }

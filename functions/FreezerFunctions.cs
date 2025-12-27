@@ -85,7 +85,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                                     {
                                         Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos));
                                     }
-                                    BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAt(i);
+                                    BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAtFast(i);
                                 }
                             }
                             break; // is multiple generators = faster intended?
@@ -115,7 +115,7 @@ namespace Ocelot.BlueCrystalCooking.functions
                             {
                                 Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>EffectManager.sendEffect(BlueCrystalCookingPlugin.Instance.Configuration.Instance.BlueCrystalFreezeEffectId, 10, tray.pos));
                             }
-                            BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAt(i);
+                            BlueCrystalCookingPlugin.Instance.freezingTrays.RemoveAtFast(i);
                         }
                     }
                 }
