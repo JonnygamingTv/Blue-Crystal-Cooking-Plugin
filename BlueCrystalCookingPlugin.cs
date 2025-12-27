@@ -181,11 +181,8 @@ namespace Ocelot.BlueCrystalCooking
 
         private void ManualUpdate()
         {
-            System.Threading.Tasks.Task.Run(() =>
-            {
-                MethBagFunctions.Update();
-                FreezerFunctions.Update();
-            });
+            MethBagFunctions.Update();
+            FreezerFunctions.Update();
         }
 
         public static Int32 getCurrentTime()
