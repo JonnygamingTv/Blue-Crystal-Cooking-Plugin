@@ -32,6 +32,7 @@ namespace Ocelot.BlueCrystalCooking
         public Dictionary<Transform, BarrelObject> placedBarrelsTransformsIngredients = new Dictionary<Transform, BarrelObject>();
         public List<DrugeffectTimeObject> drugeffectPlayersList = new List<DrugeffectTimeObject>();
         public List<FreezingTrayObject> freezingTrays = new List<FreezingTrayObject>();
+        private static System.Threading.Timer _timer;
 
         protected override void Load()
         {
@@ -64,6 +65,8 @@ namespace Ocelot.BlueCrystalCooking
             PlayerAnimator.OnGestureChanged_Global -= OnGestureChanged;
             UseableConsumeable.onConsumePerformed -= ConsumeAction;
             BarricadeManager.onDamageBarricadeRequested -= BarricadeDamaged;
+            _timer?.Dispose();
+            Logger.Log("Unloaded.");
         }
         
         private void ConsumeAction(Player instigatingPlayer, ItemConsumeableAsset consumeableAsset)
@@ -165,6 +168,7 @@ namespace Ocelot.BlueCrystalCooking
                 }
             }
             Logger.Log("All "+ placedBarrelsTransformsIngredients.Count.ToString() + " barrels added.", ConsoleColor.Green);
+            _timer = new System.Threading.Timer(_ => ManualUpdate(), null, 1000, System.Threading.Timeout.Infinite);
         }
 
         public override TranslationList DefaultTranslations => new TranslationList
@@ -175,19 +179,10 @@ namespace Ocelot.BlueCrystalCooking
             {"bluecrystalbags_obtained", "You have <color=#75ff19>successfully obtained {0} bags</color> filled with <color=#1969ff>blue crystal</color>." }
         };
 
-        private void Update()
+        private void ManualUpdate()
         {
-            Frame++;
-            if (Frame % 5 != 0) return; // BRICHT METHODE AB WENN DER FRAME NICHT DURCH 5 TEILBAR IST
-            // DO STUFF EVERY GAME FRAME E.G 60/s
-
-            if (getCurrentTime() - timer >= 1)
-            {
-                timer = getCurrentTime();
-                MethBagFunctions.Update();
-                System.Threading.Tasks.Task.Run(()=>FreezerFunctions.Update());
-            }
-            
+            MethBagFunctions.Update();
+            System.Threading.Tasks.Task.Run(() => FreezerFunctions.Update());
         }
 
         public static Int32 getCurrentTime()
