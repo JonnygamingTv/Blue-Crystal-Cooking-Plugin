@@ -168,7 +168,7 @@ namespace Ocelot.BlueCrystalCooking
                 }
             }
             Logger.Log("All "+ placedBarrelsTransformsIngredients.Count.ToString() + " barrels added.", ConsoleColor.Green);
-            _timer = new System.Threading.Timer(_ => ManualUpdate(), null, 1000, System.Threading.Timeout.Infinite);
+            _timer = new System.Threading.Timer(_ => ManualUpdate(), null, 1000, 1000);
         }
 
         public override TranslationList DefaultTranslations => new TranslationList
@@ -181,8 +181,11 @@ namespace Ocelot.BlueCrystalCooking
 
         private void ManualUpdate()
         {
-            MethBagFunctions.Update();
-            System.Threading.Tasks.Task.Run(() => FreezerFunctions.Update());
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                MethBagFunctions.Update();
+                FreezerFunctions.Update();
+            });
         }
 
         public static Int32 getCurrentTime()

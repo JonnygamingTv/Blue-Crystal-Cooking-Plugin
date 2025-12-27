@@ -95,15 +95,15 @@ namespace Ocelot.BlueCrystalCooking.functions
                 var drugeffect = BlueCrystalCookingPlugin.Instance.drugeffectPlayersList[i];
                 if (BlueCrystalCookingPlugin.getCurrentTime() - drugeffect.time >= BlueCrystalCookingPlugin.Instance.Configuration.Instance.DrugEffectDurationSecs)
                 {
-                    BlueCrystalCookingPlugin.Instance.drugeffectPlayersList.RemoveAt(i);
                     UnturnedPlayer player = UnturnedPlayer.FromCSteamID(new CSteamID(ulong.Parse(drugeffect.playerId)));
+                    BlueCrystalCookingPlugin.Instance.drugeffectPlayersList.RemoveAt(i);
                     if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.UseDrugEffectSpeed)
                     {
-                        player.Player.movement.sendPluginSpeedMultiplier(1);
+                        Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>player.Player.movement.sendPluginSpeedMultiplier(1));
                     }
                     if (BlueCrystalCookingPlugin.Instance.Configuration.Instance.UseDrugEffectJump)
                     {
-                        player.Player.movement.sendPluginJumpMultiplier(1);
+                        Rocket.Core.Utils.TaskDispatcher.QueueOnMainThread(()=>player.Player.movement.sendPluginJumpMultiplier(1));
                     }
                 }
             }
